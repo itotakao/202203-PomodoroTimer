@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Audio;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -8,6 +9,8 @@ namespace _Application
 {
     public class LoadStageButton : MonoBehaviour
     {
+        private AudioManager AudioManager => AudioManager.Current;
+
         [SerializeField]
         private Button button;
 
@@ -25,6 +28,7 @@ namespace _Application
 
         private void OnPressedButton()
         {
+            AudioManager.SE.Play("button");
             BaseState.LoadStage(loadStageId);
         }
     }

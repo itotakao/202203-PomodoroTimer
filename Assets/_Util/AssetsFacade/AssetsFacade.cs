@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using _Application;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -70,6 +71,53 @@ namespace _Util
             {
                 UnityEditor.Events.UnityEventTools.AddPersistentListener(OnExit, i.OnExit);
             }
+
+            // UtilityEvent
+            List<string> eventNames = utilityEvents.Select(x => x.Name).ToList();
+            for (int i = 0; i < eventNames.Count; i++)
+            {
+                utilityEvents[i] = new EventClass();
+                utilityEvents[i].Name = eventNames[i];
+                utilityEvents[i].Event = new UnityEvent();
+            }
+
+            // UtilityEvent : Home
+            UnityEvent onIdle = SeacrchUtilityEvnet("OnIdle");
+            UnityEvent onAbout = SeacrchUtilityEvnet("OnAbout");
+            UnityEvent onSetting = SeacrchUtilityEvnet("OnSetting");
+            UnityEvent onStart = SeacrchUtilityEvnet("OnStart");
+            UnityEvent onPause = SeacrchUtilityEvnet("OnPause");
+            UnityEvent onRestart = SeacrchUtilityEvnet("OnRestart");
+            UnityEvent onFinish = SeacrchUtilityEvnet("OnFinish");
+            foreach (IAssetsFacadeHomeUtilityEvnets i in FindObjectOfInterfaces<IAssetsFacadeHomeUtilityEvnets>())
+            {
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(onIdle, i.OnIdle);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(onAbout, i.OnAbout);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(onSetting, i.OnSetting);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(onStart, i.OnStart);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(onPause, i.OnPause);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(onRestart, i.OnRestart);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(onFinish, i.OnFinish);
+            }
+
+            UnityEvent onTimerUpdate = SeacrchUtilityEvnet("OnTimerUpdate");
+            foreach (IAssetsFacadeTimerUpdate i in FindObjectOfInterfaces<IAssetsFacadeTimerUpdate>())
+            {
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(onTimerUpdate, i.OnTimerUpdate);
+            }
+        }
+
+        private UnityEvent SeacrchUtilityEvnet(string eventName)
+        {
+            foreach (var e in utilityEvents)
+            {
+                if (e.Name == eventName)
+                {
+                    return e.Event;
+                }
+            }
+
+            return null;
         }
 #endif
 

@@ -79,7 +79,7 @@ namespace Audio
         public IEnumerator PlayAsync(string clipName)
         {
             ResourceRequest req = Resources.LoadAsync<AudioClip>(soundPlayerType.GroupType.ToString() + "/" + clipName);
-            Debug.Log(soundPlayerType.GroupType.ToString() + "/" + clipName);
+            //Debug.Log(soundPlayerType.GroupType.ToString() + "/" + clipName);
             yield return req;
             Source.Stop();
             Play((AudioClip)req.asset);

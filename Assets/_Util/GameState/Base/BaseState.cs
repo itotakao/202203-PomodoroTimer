@@ -21,9 +21,10 @@ namespace _Application
         {
             Debug.Log("LoadState : " + GetType().Name);
 
-            InitializeAllObjects();
+            StageLoader.OnLoadedStage += OnLoadedStage;
+            StageLoader.OnUnloadedStage += OnUnloadedStage;
 
-            AssetsFacade.InvokeSetupAssets();
+            InitializeAllObjects();
         }
 
         protected void InitializeAllObjects()
@@ -40,7 +41,7 @@ namespace _Application
         {
             if (AssetsFacade.Current)
             {
-                AssetsFacade.InvokeSetupAssets();
+                AssetsFacade.InvokeUpdateAssets();
             }
         }
 
@@ -64,10 +65,8 @@ namespace _Application
 
         public override void OnStateExit()
         {
-            if (AssetsFacade.Current)
-            {
-                AssetsFacade.InvokExitAssets();
-            }
+            StageLoader.OnLoadedStage -= OnLoadedStage;
+            StageLoader.OnUnloadedStage -= OnUnloadedStage;
         }
 
         protected void ReloadScene()
@@ -84,9 +83,26 @@ namespace _Application
         {
             return stageId switch
             {
-                StageId.None => new TemplateState(stateMachine),
+                StageId.None => new HomeState(stateMachine),
+                StageId.Home => new HomeState(stateMachine),
                 _ => throw new System.ComponentModel.InvalidEnumArgumentException(),
             };
+        }
+
+        public virtual void OnLoadedStage()
+        {
+            if (AssetsFacade.Current)
+            {
+                AssetsFacade.InvokeSetupAssets();
+            }
+        }
+
+        public virtual void OnUnloadedStage()
+        {
+            if (AssetsFacade.Current)
+            {
+                AssetsFacade.InvokExitAssets();
+            }
         }
     }
 }

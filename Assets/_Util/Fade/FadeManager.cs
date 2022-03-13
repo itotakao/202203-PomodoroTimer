@@ -22,6 +22,10 @@ namespace _Util
         {
             Current = this;
             fadeImage.ExChangeAlpha(alpha);
+
+#if UNITY_EDITOR
+            fadeImage.ExChangeAlpha(0);
+#endif
         }
 
         void Update()

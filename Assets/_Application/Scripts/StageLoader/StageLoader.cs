@@ -18,6 +18,9 @@ namespace _Application
 
         public bool IsLoadComplete = false;
 
+        public Action OnLoadedStage;
+        public Action OnUnloadedStage;
+
         private string originalSceneName;
 
         public static StageId SceneNameToStageId(string sceneName)
@@ -55,11 +58,15 @@ namespace _Application
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             Debug.Log("Load : " + scene.name + ", " + loadSceneMode.ToString());
+
+            OnLoadedStage?.Invoke();
         }
 
         private void OnSceneUnloaded(Scene scene)
         {
             Debug.Log("Unload : " + scene.name);
+
+            OnUnloadedStage?.Invoke();
         }
 
         public void LoadStage(StageId stageId)
@@ -132,7 +139,7 @@ namespace _Application
         {
             if (!Stage.Current)
             {
-                string initilizeSceneName = StageIdToSceneName(DebugParameter.Data.Debug.UseDebugSkipScene);
+                string initilizeSceneName = StageIdToSceneName(StageId.Home);
                 if (SceneManager.GetSceneByName(initilizeSceneName).IsValid())
                 {
                     return null;
